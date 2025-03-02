@@ -1,4 +1,4 @@
-* Create a `service.yaml` file:
+* Create a `service.yaml` file and `deployment.yaml`:
 ```yaml
 apiVersion: apps/v1
 kind: Deployment
