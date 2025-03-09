@@ -1,23 +1,20 @@
 apiVersion: argoproj.io/v1alpha1
 kind: Application
 metadata: 
-  name: selective-sync
+  name: track-helm-range
   namespace: argocd
 spec:
   destination:
-    namespace: selective-sync
+    namespace: track-helm-range
     server: "https://kubernetes.default.svc"
   project: default
   source: 
-    path: sync-options/selective-sync
-    repoURL: "https://github.com/sawsansalah/argocd-example-apps.git"
-    targetRevision: main
-    directory:
-      recurse: true
+    chart: sealed-secrets
+    repoURL: "https://charts.bitnami.com/bitnami"
+    targetRevision: 1.* # you can use greater than and smaller than ex: >=3.0.0 <4.1.0
   syncPolicy:
     automated: {}
     syncOptions:
       - CreateNamespace=true
-      - ApplyOutOfSyncOnly=true
 
     

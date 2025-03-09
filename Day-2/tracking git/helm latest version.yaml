@@ -1,23 +1,20 @@
 apiVersion: argoproj.io/v1alpha1
 kind: Application
 metadata: 
-  name: selective-sync
+  name: track-helm-latest-version
   namespace: argocd
 spec:
   destination:
-    namespace: selective-sync
+    namespace: track-helm-latest-version
     server: "https://kubernetes.default.svc"
   project: default
   source: 
-    path: sync-options/selective-sync
-    repoURL: "https://github.com/sawsansalah/argocd-example-apps.git"
-    targetRevision: main
-    directory:
-      recurse: true
+    chart: ingress-nginx
+    repoURL: "https://kubernetes.github.io/ingress-nginx"
+    targetRevision: '*'
   syncPolicy:
     automated: {}
     syncOptions:
       - CreateNamespace=true
-      - ApplyOutOfSyncOnly=true
 
     
