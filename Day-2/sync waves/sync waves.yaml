@@ -1,45 +1,19 @@
-# wave 0: Create the Namespace first
-apiVersion: v1
-kind: Namespace
-metadata:
-  name: my-app
-  annotations:
-    argocd.argoproj.io/sync-wave: "0"
----
-# wave 1: Create the ConfigMap after the Namespace
-apiVersion: v1
-kind: ConfigMap
-metadata:
-  name: my-config
-  namespace: my-app
-  annotations:
-    argocd.argoproj.io/sync-wave: "1"
-data:
-  app.properties: |
-    key1=value1
-    key2=value2
----
-# wave 2: Create the Deployment after the ConfigMap
-apiVersion: apps/v1
-kind: Deployment
-metadata:
-  name: my-app-deployment
-  namespace: my-app
-  annotations:
-    argocd.argoproj.io/sync-wave: "2"
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata: 
+  name: sync-waves
+  namespace: argocd
 spec:
-  replicas: 3
-  selector:
-    matchLabels:
-      app: my-app
-  template:
-    metadata:
-      labels:
-        app: my-app
-    spec:
-      containers:
-      - name: my-app-container
-        image: nginx:latest
-        envFrom:
-        - configMapRef:
-            name: my-config
+  destination:
+    namespace: sync-waves
+    server: "https://kubernetes.default.svc"
+  project: default
+  source: 
+    path: sync-waves
+    repoURL: "https://github.com/mabusaa/argocd-example-apps.git"
+    targetRevision: master
+  syncPolicy:
+    syncOptions:
+      - CreateNamespace=true
+
+    
